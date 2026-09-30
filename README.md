@@ -6,7 +6,7 @@ Proactive Agent is a Claude Skill that converts a plain-English goal ("every new
 
 No code. No fine-tuning. No new platform. Just a skill file, a schedule, the apps you already connect, and one mission file.
 
-![License: PolyForm Noncommercial](https://img.shields.io/badge/license-PolyForm%20Noncommercial-lightgrey.svg)
+![License: PolyForm Internal Use](https://img.shields.io/badge/license-PolyForm%20Internal%20Use-lightgrey.svg)
 ![Claude Skill](https://img.shields.io/badge/Claude-Skill-d97757.svg)
 ![Version](https://img.shields.io/badge/version-1.1.0-green.svg)
 
@@ -105,7 +105,7 @@ LOAD → OBSERVE → ASSESS → SELECT → ACT → VERIFY → RECORD → REPORT
 ```
 proactive-agent/
 ├── README.md                     ← you are here
-├── LICENSE                       ← PolyForm Noncommercial 1.0.0
+├── LICENSE                       ← PolyForm Internal Use 1.0.0
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── GITHUB_SETUP.md               ← copy-paste text for the GitHub About box, topics, release
@@ -216,7 +216,7 @@ Issues and pull requests are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 
-Licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE) — free for personal learning & tinkering, school or research projects, and fully non-profit operations. Commercial use (selling the software, embedding it in commercial products, or using it at a for-profit job) requires written permission. © 2026 Jerid Wempen / TitanOne.
+Licensed under the [PolyForm Internal Use License 1.0.0](LICENSE) — free to use for your internal operations, including at work; you may not distribute, share copies, or sell it. © 2026 Jerid Wempen / TitanOne.
 
 ---
 
