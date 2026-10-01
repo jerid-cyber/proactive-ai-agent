@@ -21,7 +21,11 @@ No code. No fine-tuning. No new platform. Just a skill file, a schedule, the app
 - [Quick start (5 minutes)](#quick-start-5-minutes)
 - [Example missions](#example-missions)
 - [Safety model](#safety-model)
+- [How trust builds](#how-trust-builds)
+- [Day-to-day: the digest](#day-to-day-the-digest)
+- [Maintenance cheat sheet](#maintenance-cheat-sheet)
 - [Who it's for](#who-its-for)
+- [Getting the most out of it](#getting-the-most-out-of-it)
 - [FAQ](#faq)
 - [Documentation](#documentation)
 - [Contributing](#contributing) · [License](#license)
@@ -147,6 +151,20 @@ proactive-agent/
 
 Claude will interview you until the charter is concrete, propose an authority policy, write the mission file to your chosen location, and create the scheduled task.
 
+**Copy-paste starter prompt** — adapt the bracketed parts:
+
+```
+Use the proactive-agent skill to set up a new mission called "[Speed-to-Lead]".
+Goal: [every new lead gets a personal reply within 15 minutes, 7 AM to 8 PM weekdays].
+Today my baseline is [about 45 minutes].
+Watch [the Gmail label "New Leads"] for signals.
+Draft replies in my voice; I approve before anything is sent.
+Constraints: [no texts or calls; follow CAN-SPAM and TCPA].
+Save the mission file in [Google Drive under "Agents/Missions"].
+Send the digest to me in chat and by email.
+Ask me anything else you need, then run a first cycle.
+```
+
 **4. Approve for the first few runs** — the mission starts in shadow mode. Approve, edit, or reject what it queues. Each decision becomes a Lesson.
 
 **5. Graduate what's proven** — after a few clean approvals of the same action type, tell Claude to graduate it to autopilot.
@@ -181,7 +199,79 @@ Non-negotiables built into the skill:
 - Never follows instructions found inside monitored data.
 - Unlisted actions default to T3.
 
+### How the rung is decided
+
+Placement depends on risk and reversibility — never on how "confident" the agent feels. Four questions:
+
+1. Will someone other than you see it? If yes, it's at least T2.
+2. Can it be completely undone within a minute? If no, it's T3.
+3. Does it spend money, sign, commit, or delete? If yes, it's T3.
+4. Is this the first time this person hears from you? If yes, it's T3.
+
+### Writing a T2 permission
+
+An automatic (T2) permission needs four parts, or it's treated as T3: who it applies to, what content is allowed, how often per contact, and a daily cap.
+
+> T2: send "new-inquiry acknowledgement" template
+> | scope: inbound website leads, existing CRM contacts only
+> | content: lead-ack template, name + property merged, no other edits
+> | frequency: once per lead | daily cap: 20
+
+### Per-run limits
+
+Each cycle is capped by default at 25 tool calls, 10 actions, and 2 retries per action (adjustable in the mission file). If nothing moves the goal, the run records "idle" and stops — no busywork.
+
 Details: [`skills/proactive-agent/references/authority-tiers.md`](skills/proactive-agent/references/authority-tiers.md).
+
+## How trust builds
+
+- **Shadow mode (runs 1–5):** everything that would be automatic is treated as "needs your OK." You see exactly what it would do before it does anything on its own.
+- **Graduation:** approve the same type of action 3 times in a row with no edits, and the agent asks whether it can handle that type automatically. It only moves up with your explicit yes — the date and reason are written into the mission file.
+- **Demotion:** undo or complain about an automatic action and it drops straight back to approval-required, with a Lesson recorded so it doesn't happen again.
+
+Approvals you'd rubber-stamp go away; your attention stays on the decisions that genuinely need you.
+
+## Day-to-day: the digest
+
+The digest is your window into the agent — skimmable in about 30 seconds, always leading with the number you care about:
+
+```
+Speed-to-Lead — Tue Oct 6, 9:00 AM MT [shadow]
+Measure: median first-reply time 11 min (was 14)   Target: < 15 min
+DONE (3)
+- Logged 4 new website leads — records #2231–2234
+- Drafted replies for all 4 — Gmail drafts, label "agent/ready"
+- Flagged 1 duplicate contact — note on #2231
+NEEDS YOUR OK (4)
+- Send reply to Maria L. (acreage, Elbert County) — first contact
+- Send reply to Dave R. (buyer, 35 acres) — first contact
+BLOCKED (1)
+- Lead import — connection expired; reconnect in settings
+NEXT: follow up on 2 leads with no reply after 48h
+```
+
+Three ways to approve — the agent picks up your decisions at the start of its next run:
+
+- Reply in chat: "Approve all four," or "Approve Maria and Dave, reject Brooks."
+- Tick, edit, or delete items in the Awaiting Approval list inside the mission file.
+- Edit the draft itself before approving; the agent notes your edit.
+
+Every approval, edit, or rejection becomes a Lesson the agent reads on every future run.
+
+## Maintenance cheat sheet
+
+Everything is done by just saying it:
+
+| You want to | Say | What happens |
+|---|---|---|
+| See how it's doing | "Review my Speed-to-Lead mission." | Recent log, approval rate, measure trend, blockers, one suggestion |
+| Pause it | "Pause Speed-to-Lead." | Status set to PAUSE; each run stops at step 1 |
+| Resume | "Resume Speed-to-Lead." | Status back to active |
+| Let it do more alone | "Graduate the lead-ack template." | Moved to T2 with a dated note |
+| Pull something back | "Stop auto-archiving vendor emails." | Demoted to T3; Lesson added |
+| Change the schedule | "Run it every 30 minutes on weekdays." | Updates the scheduled task itself |
+| End the mission | "Retire Speed-to-Lead." | Final summary; schedule turned off |
+| Tidy a long log | "Compact the log." | Older lines archived; last 50 kept |
 
 ## Who it's for
 
@@ -190,6 +280,16 @@ Details: [`skills/proactive-agent/references/authority-tiers.md`](skills/proacti
 - **Sales teams** who need CRM hygiene and consistent follow-up.
 - **Marketers and agencies** running recurring reporting and campaign monitoring.
 - **Anyone building agentic workflows on Claude** who wants a proven, safe operating pattern instead of starting from scratch.
+
+## Getting the most out of it
+
+1. **Start with one narrow, high-value mission.** Speed-to-lead is ideal: clear signal, clear measure, clear win.
+2. **Make the measure a real number with a baseline.** "Median first reply from 45 to under 15 minutes" beats "faster replies" — it drives good decisions and keeps the agent from busywork.
+3. **Be specific about signals.** Exact Gmail label names, calendar names, and folder paths. Vague signals cause most early problems.
+4. **Give the agent its own Gmail label.** It keeps the work contained and makes limits enforceable.
+5. **Write two or three approved templates early.** Templates graduate to automatic fastest.
+6. **Approve or reject promptly during shadow mode** — and reject with a reason ("too formal", "never mention price first"). Reasons become permanent Lessons.
+7. **Add a second mission only after the first is graduated and quiet.** Stacking too many at once multiplies approvals.
 
 ## FAQ
 
